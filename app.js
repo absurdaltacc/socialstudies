@@ -3,7 +3,17 @@ const launcher = document.querySelector('.launcher');
 const workspace = document.querySelector('.workspace');
 const workspaceContent = document.querySelector('#workspace-content');
 const messages = ['inspired by x8rs cherri', 'do ur wprk boi', 'this is so tuffy', 'ohio sigma mode acitviated'];
-const themes = ['catpuccin', 'minecraft', 'cyberpunk', 'lobotomy', 'alt', 'interstellar', 'matrix'];
+const themes = ['catpuccin', 'minecraft', 'cyberpunk', 'lobotomy', 'alt', 'interstellar', 'matrix', 'hunt'];
+const themeBackgrounds = {
+  catpuccin: 'nature.mp4',
+  minecraft: 'minecraft.mp4',
+  cyberpunk: 'cyberpunk.mp4',
+  lobotomy: 'lobotomy.mp4',
+  alt: 'alt.mp4',
+  interstellar: 'interstellar.mp4',
+  matrix: 'matrix.mp4',
+  hunt: 'Hunt.mp4'
+};
 const themeSounds = {
   catpuccin: { start: 392, end: 523, wave: 'sine' },
   minecraft: { start: 196, end: 262, wave: 'square' },
@@ -11,13 +21,28 @@ const themeSounds = {
   lobotomy: { start: 220, end: 220, wave: 'triangle' },
   alt: { start: 146, end: 73, wave: 'sawtooth' },
   interstellar: { start: 174, end: 349, wave: 'sine' },
-  matrix: { start: 330, end: 660, wave: 'square' }
+  matrix: { start: 330, end: 660, wave: 'square' },
+  hunt: { start: 98, end: 147, wave: 'triangle' }
 };
 let audioContext;
 let messageIndex = 0;
+const themeBackground = document.querySelector('#theme-background');
 
 const savedTheme = localStorage.getItem('c3-theme');
 if (themes.includes(savedTheme)) document.body.dataset.theme = savedTheme;
+setThemeBackground(document.body.dataset.theme || themes[0]);
+
+function setThemeBackground(theme) {
+  const filename = themeBackgrounds[theme];
+  if (!filename) return;
+  themeBackground.src = `assets/videos/${filename}`;
+  themeBackground.load();
+  themeBackground.play().catch(() => {});
+}
+
+function formatThemeName(theme) {
+  return theme === 'catpuccin' ? 'Catppuccin' : theme.charAt(0).toUpperCase() + theme.slice(1);
+}
 
 function playThemeSound(theme = document.body.dataset.theme || 'catpuccin') {
   const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -80,7 +105,7 @@ const views = {
   browser: () => `<div class="view-header"><div><p class="kicker">Scramjet browser</p><h1>C3 browse</h1></div><form class="address-row" id="address-form"><button type="button" class="browser-control" id="browser-back" aria-label="Go back">‹</button><button type="button" class="browser-control" id="browser-forward" aria-label="Go forward">›</button><input id="address-input" type="url" placeholder="https://example.com" autocomplete="url" /><button class="action-button">Go</button></form></div><div class="browser-status"><span class="status-dot"></span><span id="browser-status-text">Scramjet browser shell ready</span><a href="https://github.com/MercuryWorkshop/scramjet" target="_blank" rel="noreferrer">Scramjet source</a></div><iframe class="proxy-frame" id="proxy-frame" title="C3 browser" src="https://scramjet.mercurywork.shop"></iframe>`,
   games: () => `<div class="view-header"><div><p class="kicker">gmshelf catalog</p><h1>Game shelf</h1></div><label class="source-select">Source <select id="game-source">${Object.keys(shelves).map((name) => `<option value="${name}">${name}</option>`).join('')}</select></label></div><div class="game-groups" id="game-groups"><p class="notice">Loading game shelf...</p></div><div class="game-player" id="game-player" hidden><div class="player-bar"><strong id="game-player-title">Loading game</strong><button id="game-player-close" class="player-close" aria-label="Close game">×</button></div><iframe id="game-frame" title="Game player"></iframe></div>`,
   music: () => `<div class="view-header"><div><p class="kicker">Anchor player</p><h1>Music</h1></div><a class="action-button" href="https://viroda1.github.io/anchor/app-spotify.html" target="_blank" rel="noreferrer">Open separately</a></div><iframe class="music-frame" title="C3 music player" src="https://viroda1.github.io/anchor/app-spotify.html"></iframe>`,
-  settings: () => `<div class="view-header"><div><p class="kicker">Personalize C3</p><h1>Settings</h1></div></div><p class="notice">Choose a visual theme and the game shelf used by the Games tab. Changes are saved in this browser.</p><h2 class="settings-heading">Themes</h2><div class="theme-grid">${themes.map((theme) => `<button class="theme-button" data-theme="${theme}"><span></span><strong>${theme}</strong></button>`).join('')}</div><h2 class="settings-heading">Game source</h2><div class="source-grid">${Object.keys(shelves).map((name) => `<button class="source-button" data-source="${name}"><strong>${name}</strong><small>${shelves[name].label}</small></button>`).join('')}</div>`
+  settings: () => `<div class="view-header"><div><p class="kicker">Personalize C3</p><h1>Settings</h1></div></div><p class="notice">Choose a visual theme and the game shelf used by the Games tab. Changes are saved in this browser.</p><h2 class="settings-heading">Themes</h2><div class="theme-grid">${themes.map((theme) => `<button class="theme-button" data-theme="${theme}"><span></span><strong>${formatThemeName(theme)}</strong></button>`).join('')}</div><h2 class="settings-heading">Game source</h2><div class="source-grid">${Object.keys(shelves).map((name) => `<button class="source-button" data-source="${name}"><strong>${name}</strong><small>${shelves[name].label}</small></button>`).join('')}</div>`
 };
 
 function setupBrowser() {
@@ -90,8 +115,14 @@ function setupBrowser() {
     let url = input.value.trim();
     if (!url) return;
     if (!/^https?:\/\//i.test(url)) url = `https://${url}`;
-    document.querySelector('#proxy-frame').src = `https://scramjet.mercurywork.shop/?url=${encodeURIComponent(url)}`;
+    document.querySelector('#proxy-frame').src = `https://scramjet.mercurywork.shop/?goto=${encodeURIComponent(url)}`;
     document.querySelector('#browser-status-text').textContent = `Loading ${url}`;
+  });
+  document.querySelector('#proxy-frame').addEventListener('load', () => {
+    document.querySelector('#browser-status-text').textContent = 'Browser proxy ready';
+  });
+  document.querySelector('#proxy-frame').addEventListener('error', () => {
+    document.querySelector('#browser-status-text').textContent = 'Proxy failed to load. Try opening the URL separately.';
   });
   document.querySelector('#browser-back').addEventListener('click', () => document.querySelector('#proxy-frame').contentWindow?.history.back());
   document.querySelector('#browser-forward').addEventListener('click', () => document.querySelector('#proxy-frame').contentWindow?.history.forward());
@@ -136,6 +167,7 @@ function setupSettings() {
     button.addEventListener('click', () => {
       document.body.dataset.theme = button.dataset.theme;
       localStorage.setItem('c3-theme', button.dataset.theme);
+      setThemeBackground(button.dataset.theme);
       document.querySelectorAll('.theme-button').forEach((item) => item.classList.remove('selected'));
       button.classList.add('selected');
       playThemeSound(button.dataset.theme);

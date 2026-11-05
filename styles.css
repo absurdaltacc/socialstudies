@@ -17,6 +17,7 @@ body {
 }
 body::before { content: ''; position: fixed; inset: 0; pointer-events: none; background: rgba(225, 230, 230, .16); }
 body::after { content: ''; position: fixed; z-index: 0; inset: 0; pointer-events: none; opacity: .16; background: var(--vfx); mix-blend-mode: screen; }
+.theme-background { position: fixed; z-index: -2; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: saturate(.8) brightness(.72); pointer-events: none; }
 button, input { font: inherit; }
 button { color: inherit; }
 .launcher { position: relative; z-index: 1; min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px 22px 65px; transition: filter .25s ease; }
@@ -85,10 +86,13 @@ body[data-theme="cyberpunk"] { --paper: #120d25; --ink: #f7eaff; --line: #ff2bd6
 body[data-theme="lobotomy"] { --paper: #bdbdbd; --ink: #171717; --line: #303030; --accent: #686868; --panel: rgba(231,231,231,.92); --surface: rgba(255,255,255,.7); --vfx: repeating-linear-gradient(135deg, rgba(0,0,0,.08) 0 1px, transparent 1px 8px); filter: grayscale(.85); }
 body[data-theme="alt"] { --paper: #180e13; --ink: #f6e8eb; --line: #9c273d; --accent: #d84862; --panel: rgba(39,16,25,.92); --surface: rgba(65,24,36,.72); --vfx: radial-gradient(ellipse at 50% -10%, rgba(216,72,98,.38), transparent 60%), repeating-linear-gradient(90deg, transparent 0 38px, rgba(156,39,61,.12) 39px 40px); }
 body[data-theme="interstellar"] { --paper: #071229; --ink: #e6f2ff; --line: #397cc1; --accent: #63b3ff; --panel: rgba(9,24,52,.9); --surface: rgba(19,46,87,.66); --vfx: radial-gradient(circle at 12% 18%, #fff 0 1px, transparent 2px), radial-gradient(circle at 70% 60%, #9ed5ff 0 1px, transparent 2px), radial-gradient(circle at 90% 25%, #fff 0 1px, transparent 2px); }
-body[data-theme="matrix"] { --paper: #020b05; --ink: #baffc9; --line: #00a83f; --accent: #00ff66; --panel: rgba(3,25,11,.94); --surface: rgba(5,48,20,.75); --vfx: repeating-linear-gradient(90deg, transparent 0 18px, rgba(0,255,102,.12) 19px 20px), linear-gradient(180deg, rgba(0,255,102,.16), transparent 45%); }
+body[data-theme="matrix"] { --paper: #080808; --ink: #f2f2f2; --line: #fff; --accent: #bdbdbd; --panel: rgba(12,12,12,.94); --surface: rgba(40,40,40,.78); --vfx: repeating-linear-gradient(90deg, transparent 0 18px, rgba(255,255,255,.1) 19px 20px), linear-gradient(180deg, rgba(255,255,255,.12), transparent 45%); }
+body[data-theme="hunt"] { --paper: #201812; --ink: #f5ead8; --line: #9c6a3c; --accent: #d29a5b; --panel: rgba(45,31,20,.92); --surface: rgba(78,52,32,.72); --vfx: radial-gradient(ellipse at 50% 0, rgba(210,154,91,.3), transparent 58%), repeating-linear-gradient(135deg, transparent 0 10px, rgba(156,106,60,.1) 11px 12px); }
 body[data-theme="minecraft"] .view-header h1, body[data-theme="minecraft"] .game-card strong, body[data-theme="minecraft"] .theme-button strong { font-family: 'Press Start 2P', monospace; letter-spacing: 0; }
 body[data-theme="cyberpunk"] .toolbelt, body[data-theme="cyberpunk"] .workspace { box-shadow: 0 0 18px rgba(0,229,255,.3), 0 0 36px rgba(255,43,214,.18); }
 body[data-theme="matrix"] .changing-footer, body[data-theme="matrix"] .kicker { text-shadow: 0 0 8px var(--accent); }
+body[data-theme="matrix"] .theme-background { filter: grayscale(1) brightness(.55); }
+body[data-theme="matrix"] .status-dot { background: #fff; box-shadow: 0 0 0 3px rgba(255,255,255,.16); }
 @keyframes rise { from { opacity: 0; transform: translateY(12px) scale(.985); } to { opacity: 1; transform: none; } }
 @media (max-width: 620px) { .launcher { padding-top: 30px; }.logo-wrap { width: min(350px, 82vw); }.changing-footer { margin: 20px 0 24px; }.toolbelt { min-height: 59px; gap: 2px; padding: 7px 8px; border-radius: 14px; }.tool { width: 41px; height: 41px; }.tool img { width: 27px; height: 27px; }.divider { height: 27px; margin: 0 3px; }.workspace { inset: 2vh 2vw; padding: 22px 15px; border-radius: 15px; }.view-header { display: block; }.view-header h1 { margin-bottom: 18px; }.address-row { display: grid; grid-template-columns: auto auto 1fr auto; }.proxy-frame, .music-frame { height: 60vh; }.game-player { inset: 2vh 2vw; } }
 @media (prefers-reduced-motion: reduce) { .changing-footer, .tool { transition: none; } }
