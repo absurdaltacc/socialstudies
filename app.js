@@ -3,11 +3,41 @@ const launcher = document.querySelector('.launcher');
 const workspace = document.querySelector('.workspace');
 const workspaceContent = document.querySelector('#workspace-content');
 const messages = ['inspired by x8rs cherri', 'do ur wprk boi', 'this is so tuffy', 'ohio sigma mode acitviated'];
-const themes = ['catpuccin', 'neko', 'slay', 'anime', 'opsec', 'larp', 'minecraft'];
+const themes = ['catpuccin', 'minecraft', 'cyberpunk', 'lobotomy', 'alt', 'interstellar', 'matrix'];
+const themeSounds = {
+  catpuccin: { start: 392, end: 523, wave: 'sine' },
+  minecraft: { start: 196, end: 262, wave: 'square' },
+  cyberpunk: { start: 110, end: 880, wave: 'sawtooth' },
+  lobotomy: { start: 220, end: 220, wave: 'triangle' },
+  alt: { start: 146, end: 73, wave: 'sawtooth' },
+  interstellar: { start: 174, end: 349, wave: 'sine' },
+  matrix: { start: 330, end: 660, wave: 'square' }
+};
+let audioContext;
 let messageIndex = 0;
 
 const savedTheme = localStorage.getItem('c3-theme');
-if (savedTheme) document.body.dataset.theme = savedTheme;
+if (themes.includes(savedTheme)) document.body.dataset.theme = savedTheme;
+
+function playThemeSound(theme = document.body.dataset.theme || 'catpuccin') {
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContext) return;
+  audioContext ??= new AudioContext();
+  if (audioContext.state === 'suspended') audioContext.resume();
+  const sound = themeSounds[theme] || themeSounds.catpuccin;
+  const now = audioContext.currentTime;
+  const oscillator = audioContext.createOscillator();
+  const gain = audioContext.createGain();
+  oscillator.type = sound.wave;
+  oscillator.frequency.setValueAtTime(sound.start, now);
+  oscillator.frequency.exponentialRampToValueAtTime(sound.end, now + 0.12);
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.exponentialRampToValueAtTime(0.055, now + 0.015);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.16);
+  oscillator.connect(gain).connect(audioContext.destination);
+  oscillator.start(now);
+  oscillator.stop(now + 0.17);
+}
 
 window.setInterval(() => {
   footer.classList.add('fade');
@@ -37,6 +67,7 @@ document.querySelector('.workspace-close').addEventListener('click', closeWorksp
 
 document.querySelectorAll('.tool').forEach((tool) => {
   tool.addEventListener('click', () => {
+    playThemeSound();
     document.querySelector('.tool.active')?.classList.remove('active');
     tool.classList.add('active');
     const view = tool.dataset.view;
@@ -99,13 +130,15 @@ function playGame(url, name) { document.querySelector('#game-player-title').text
 function escapeHtml(value) { return String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[char]); }
 
 function setupSettings() {
+  const currentTheme = document.body.dataset.theme || themes[0];
   document.querySelectorAll('.theme-button').forEach((button) => {
-    button.classList.toggle('selected', button.dataset.theme === savedTheme);
+    button.classList.toggle('selected', button.dataset.theme === currentTheme);
     button.addEventListener('click', () => {
       document.body.dataset.theme = button.dataset.theme;
       localStorage.setItem('c3-theme', button.dataset.theme);
       document.querySelectorAll('.theme-button').forEach((item) => item.classList.remove('selected'));
       button.classList.add('selected');
+      playThemeSound(button.dataset.theme);
     });
   });
   document.querySelectorAll('.source-button').forEach((button) => {
