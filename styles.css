@@ -17,7 +17,7 @@ body {
 }
 body::before { content: ''; position: fixed; inset: 0; pointer-events: none; background: rgba(225, 230, 230, .16); }
 body::after { content: ''; position: fixed; z-index: 0; inset: 0; pointer-events: none; opacity: .16; background: var(--vfx); mix-blend-mode: screen; }
-.theme-background { position: fixed; z-index: -2; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: saturate(.8) brightness(.72); pointer-events: none; }
+.theme-background { position: fixed; z-index: 0; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .42; filter: saturate(.8) brightness(.72); pointer-events: none; }
 button, input { font: inherit; }
 button { color: inherit; }
 .launcher { position: relative; z-index: 1; min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px 22px 65px; transition: filter .25s ease; }
@@ -75,7 +75,7 @@ button { color: inherit; }
 .theme-button span { display: block; width: 35px; height: 35px; margin-bottom: 12px; border-radius: 50%; background: var(--swatch); }
 .theme-button strong { font-size: 11px; }
 .theme-button.selected { border: 2px solid var(--ink); }
-.theme-button[data-theme="catpuccin"] { --swatch: #cba6f7; }.theme-button[data-theme="minecraft"] { --swatch: #72a94c; }.theme-button[data-theme="cyberpunk"] { --swatch: #ff2bd6; }.theme-button[data-theme="lobotomy"] { --swatch: #d8d8d8; }.theme-button[data-theme="alt"] { --swatch: #9c273d; }.theme-button[data-theme="interstellar"] { --swatch: #5da9ff; }.theme-button[data-theme="matrix"] { --swatch: #00ff66; }
+.theme-button[data-theme="catpuccin"] { --swatch: #cba6f7; }.theme-button[data-theme="minecraft"] { --swatch: #72a94c; }.theme-button[data-theme="cyberpunk"] { --swatch: #ff2bd6; }.theme-button[data-theme="lobotomy"] { --swatch: #d8d8d8; }.theme-button[data-theme="alt"] { --swatch: #9c273d; }.theme-button[data-theme="interstellar"] { --swatch: #5da9ff; }.theme-button[data-theme="matrix"] { --swatch: #fff; }.theme-button[data-theme="hunt"] { --swatch: #d29a5b; }
 .settings-heading { margin: 30px 0 12px; font-size: 14px; }
 .source-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; max-width: 760px; }
 .source-button { padding: 14px; border: 1px solid var(--soft-line); border-radius: 9px; background: var(--surface); text-align: left; cursor: pointer; }
