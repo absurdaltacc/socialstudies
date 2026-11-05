@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>C3 Scramjet</title>
+    <style>body{margin:0;padding:28px;background:#d7ddde;color:#191b1d;font:14px monospace}main{max-width:760px;margin:auto;padding:28px;border:2px solid #222629;border-radius:16px;background:#edf1f0;box-shadow:0 6px 0 #222629}h1{margin-top:0}code{display:block;white-space:pre-wrap;padding:16px;border:1px solid #778080;border-radius:8px;background:#fff}.status{margin:18px 0;padding:12px;border-left:4px solid #607d7a;background:#fff}.ok{color:#28744a}.warn{color:#9a5c1f}</style>
+  </head>
+  <body>
+    <main>
+      <h1>C3 / Scramjet runtime</h1>
+      <div class="status" id="status">Booting Scramjet controller...</div>
+      <p>Enter a URL in the C3 browser to open it through this runtime. A Wisp transport is required for remote proxy traffic.</p>
+      <code>controller: scramjet/scramjet.js
+bundle: published scramjet.all.js
+wasm: published scramjet.wasm
+transport: BareMux
+service worker: scram/sw.js</code>
+    </main>
+    <script src="https://cdn.jsdelivr.net/gh/Destroyed12121/Staticsj@main/JS/scramjet.all.js"></script>
+    <script type="module" src="scramjet.js"></script>
+  </body>
+</html>
