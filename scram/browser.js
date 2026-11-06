@@ -1,5 +1,3 @@
-import * as BareMux from 'https://cdn.jsdelivr.net/npm/@mercuryworkshop/bare-mux@2.1.9/dist/index.mjs';
-
 const runtimeBase = new URL('.', import.meta.url).pathname;
 const runtimeFiles = {
   wasm: 'https://cdn.jsdelivr.net/gh/x8rr/scramjet-templates@ab246887ba1003add1cd3e178d157b79e0f6a7f4/templates/html/2.0.67-alpha.1/scramjet/scramjet.wasm',
@@ -7,7 +5,8 @@ const runtimeFiles = {
   sync: 'https://cdn.jsdelivr.net/gh/Destroyed12121/Staticsj@8e96a110b95d330b3e8c698b29c7292c23dd0b85/JS/scramjet.sync.js'
 };
 
-window.C3ScramjetBrowser = (async () => {
+window.C3ScramjetBrowser = () => (async () => {
+  const BareMux = await import('https://cdn.jsdelivr.net/npm/@mercuryworkshop/bare-mux@2.1.9/dist/index.mjs');
   if (!('serviceWorker' in navigator)) throw new Error('Service workers are unavailable.');
   await navigator.serviceWorker.register(`${runtimeBase}sw.js`, { scope: runtimeBase, updateViaCache: 'none' });
   await navigator.serviceWorker.ready;

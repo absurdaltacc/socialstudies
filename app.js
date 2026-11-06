@@ -2,9 +2,11 @@ const footer = document.querySelector('.changing-footer');
 const launcher = document.querySelector('.launcher');
 const workspace = document.querySelector('.workspace');
 const workspaceContent = document.querySelector('#workspace-content');
-const messages = ['inspired by x8rs cherri', 'do ur work boi', 'this is so tuffy', 'ohio sigma mode acitviated', 'brooklyn do your work now.', '#aizhirisabum', '#howualive??', 'c3 is a work in progress', 'scramjet is a work in progress', 'website looking so tuff', 'thanks to lyra.zip for the anime streaming', 'thanks to gmshelf for the games', 'im goated, really goated', 'gg friggn ezy', 'vibe coders will all dissapear', 'lamo lmao lmao'];
-const themes = ['nature', 'cozy', 'cyberpunk', 'lobotomy', 'alt', 'interstellar', 'matrix', 'hunt'];
+const messages = ['inspired by x8rs cherri', 'do ur work boi', 'this is so tuffy', 'ohio sigma mode acitviated', 'brooklyn do your work now.', '#aizhirisabum', '#howualive??', 'c3 is a work in progress', 's', 'website looking so tuff', 'thanks to lyra.zip for the anime streaming', 'thanks to Lyra for the games', 'im goated, really goated', 'gg friggn ezy', 'vibe coders will all dissapear', 'lamo lmao lmao'];
+const themes = ['default', 'nature', 'cozy', 'cyberpunk', 'lobotomy', 'alt', 'interstellar', 'matrix', 'hunt'];
+const DEFAULT_THEME = 'default';
 const themeBackgrounds = {
+  default: '',
   nature: 'nature.mp4',
   cozy: 'minecraft.mp4',
   cyberpunk: 'cyberpunk.mp4',
@@ -15,6 +17,7 @@ const themeBackgrounds = {
   hunt: 'Hunt.mp4'
 };
 const themeSounds = {
+  default: { start: 261, end: 261, wave: 'sine' },
   nature: { start: 392, end: 523, wave: 'sine' },
   cozy: { start: 196, end: 262, wave: 'square' },
   cyberpunk: { start: 110, end: 880, wave: 'sawtooth' },
@@ -34,8 +37,8 @@ const themeBackground = document.querySelector('#theme-background');
 const themeLogo = document.querySelector('#theme-logo');
 
 const savedTheme = localStorage.getItem('c3-theme');
-if (themes.includes(savedTheme)) document.body.dataset.theme = savedTheme;
-setTheme(document.body.dataset.theme || themes[0]);
+const initialTheme = themes.includes(savedTheme) ? savedTheme : DEFAULT_THEME;
+setTheme(initialTheme);
 
 function setTheme(theme) {
   document.body.dataset.theme = theme;
@@ -45,7 +48,12 @@ function setTheme(theme) {
 
 function setThemeBackground(theme) {
   const filename = themeBackgrounds[theme];
-  if (!filename) return;
+  if (!filename) {
+    themeBackground.classList.remove('active');
+    themeBackground.removeAttribute('src');
+    themeBackground.load();
+    return;
+  }
   themeBackground.classList.toggle('active', true);
   themeBackground.src = `assets/videos/${filename}`;
   themeBackground.load();
@@ -53,6 +61,10 @@ function setThemeBackground(theme) {
 }
 
 function setThemeLogo(theme) {
+  if (theme === DEFAULT_THEME) {
+    themeLogo.src = 'assets/toolbar-icons/logo.png';
+    return;
+  }
   themeLogo.src = `assets/theme-logos/${theme}.png`;
   themeLogo.onerror = () => {
     themeLogo.onerror = null;
@@ -64,12 +76,12 @@ function formatThemeName(theme) {
   return theme.charAt(0).toUpperCase() + theme.slice(1);
 }
 
-function playThemeSound(theme = document.body.dataset.theme || 'nature') {
+function playThemeSound(theme = document.body.dataset.theme || DEFAULT_THEME) {
   const AudioContext = window.AudioContext || window.webkitAudioContext;
   if (!AudioContext) return;
   audioContext ??= new AudioContext();
   if (audioContext.state === 'suspended') audioContext.resume();
-  const sound = themeSounds[theme] || themeSounds.nature;
+  const sound = themeSounds[theme] || themeSounds[DEFAULT_THEME];
   const now = audioContext.currentTime;
   const oscillator = audioContext.createOscillator();
   const gain = audioContext.createGain();
@@ -151,8 +163,8 @@ document.querySelectorAll('.tool').forEach((tool) => {
 });
 
 const views = {
-  browser: () => `<div class="view-header"><div><p class="kicker">Local Scramjet browser</p><h1>C3 browse</h1></div><form class="address-row" id="address-form"><button type="button" class="browser-control" id="browser-back" aria-label="Go back">‹</button><button type="button" class="browser-control" id="browser-forward" aria-label="Go forward">›</button><input id="address-input" type="url" placeholder="https://example.com" autocomplete="url" /><button class="action-button">Go</button></form></div><div class="browser-status"><span class="status-dot"></span><span id="browser-status-text">Starting local Scramjet...</span><a href="https://github.com/MercuryWorkshop/scramjet" target="_blank" rel="noreferrer">Runtime source</a></div><div class="proxy-frame" id="proxy-frame" title="C3 local Scramjet browser"></div>`,
-  games: () => `<div class="view-header"><div><p class="kicker">gmshelf catalog</p><h1>Game shelf</h1></div><label class="source-select">Source <select id="game-source">${Object.keys(shelves).map((name) => `<option value="${name}">${name}</option>`).join('')}</select></label></div><div class="game-groups" id="game-groups"><p class="notice">Loading game shelf...</p></div><div class="game-player" id="game-player" hidden><div class="player-bar"><strong id="game-player-title">Loading game</strong><button id="game-player-close" class="player-close" aria-label="Close game">×</button></div><iframe id="game-frame" title="Game player"></iframe></div>`,
+  browser: () => `<div class="browser-shell"><header class="browser-toolbar"><div class="browser-nav"><button type="button" class="browser-control" id="browser-back" aria-label="Go back">‹</button><button type="button" class="browser-control" id="browser-forward" aria-label="Go forward">›</button><button type="button" class="browser-control" id="browser-home" aria-label="Open Brave start page">⌂</button></div><form class="address-row" id="address-form"><input id="address-input" type="text" placeholder="Search or enter a web address" autocomplete="off" /><button class="action-button">Go</button></form><span class="browser-brand">brave</span></header><div class="browser-status"><span class="status-dot"></span><span id="browser-status-text">Brave start page</span><a href="https://github.com/absurdaltacc/absent" target="_blank" rel="noreferrer">Runtime source</a></div><div class="proxy-frame" id="proxy-frame" title="C3 browser"><section class="brave-start" id="brave-start"><div class="brave-mark">B</div><h1>Brave</h1><p>Private, fast, and built for the open web.</p><form class="brave-search" id="brave-search"><input type="search" placeholder="Search the web" aria-label="Search the web" /><button aria-label="Search">⌕</button></form><div class="brave-links"><button data-url="https://brave.com">Brave</button><button data-url="https://search.brave.com">Brave Search</button><button data-url="https://github.com">GitHub</button></div></section></div></div>`,
+  games: () => `<div class="view-header"><div><p class="kicker">Lyra game catalog</p><h1>Game shelf</h1></div><label class="source-select">Source <select id="game-source">${Object.keys(shelves).map((name) => `<option value="${name}">${name}</option>`).join('')}</select></label></div><div class="game-groups" id="game-groups"><p class="notice">Loading game shelf...</p></div><div class="game-player" id="game-player" hidden><div class="player-bar"><strong id="game-player-title">Loading game</strong><button id="game-player-close" class="player-close" aria-label="Close game">×</button></div><iframe id="game-frame" title="Game player"></iframe></div>`,
   anime: () => `<div class="view-header"><div><p class="kicker">AniList catalog · Lyra streams</p><h1>Anime</h1></div><form class="address-row" id="anime-search-form"><input id="anime-query" placeholder="Search anime" value="One Piece" /><button class="action-button">Search</button></form></div><div class="anime-layout"><section><div id="anime-results" class="anime-results"><p class="notice">Loading AniList...</p></div></section><section class="anime-player"><div class="player-bar"><strong id="anime-player-title">Choose a show</strong><span class="kicker">Lyra HLS</span></div><div class="media-stage"><video id="anime-video" class="anime-video" controls playsinline></video><div class="media-loading" id="anime-loading" hidden>Resolving stream...</div></div><div id="anime-episodes" class="anime-episodes"><p class="notice">Select a show to see episodes.</p></div><div class="media-actions"><a id="anime-download" class="media-action" target="_blank" rel="noreferrer" hidden>Download</a><p id="anime-player-status" class="player-status">Lyra direct stream is ready when you choose an episode.</p></div></section></div>`,
   music: () => `<div class="view-header"><div><p class="kicker">C3 music</p><h1>Listen</h1></div><a class="action-button" href="https://github.com/cherriunblocked/svg/tree/main/b" target="_blank" rel="noreferrer">Source reference</a></div><div class="music-layout"><section class="music-player"><div class="album-art" id="album-art">C3</div><div class="now-playing"><p class="kicker">Now playing</p><h2 id="now-playing-title">Choose a track</h2><p id="now-playing-artist">Search for an artist or song</p></div><audio id="audio-player" controls></audio><div class="media-actions"><a id="music-download" class="media-action" download hidden>Download preview</a></div></section><section class="music-search"><form class="search-row" id="music-search-form"><input id="music-query" placeholder="Search songs or artists" value="lofi" /><button class="action-button">Search</button></form><div id="music-results" class="music-results"><p class="notice">Search to load playable previews.</p></div></section></div>`,
   settings: () => `<div class="view-header"><div><p class="kicker">Personalize C3</p><h1>Settings</h1></div></div><p class="notice">Choose a visual theme and the game shelf used by the Games tab. Changes are saved in this browser.</p><h2 class="settings-heading">Themes</h2><div class="theme-grid">${themes.map((theme) => `<button class="theme-button" data-theme="${theme}"><span></span><strong>${formatThemeName(theme)}</strong></button>`).join('')}</div><h2 class="settings-heading">Game source</h2><div class="source-grid">${Object.keys(shelves).map((name) => `<button class="source-button" data-source="${name}"><strong>${name}</strong><small>${shelves[name].label}</small></button>`).join('')}</div>`
@@ -161,49 +173,81 @@ const views = {
 function setupBrowser() {
   const stage = document.querySelector('#proxy-frame');
   let scramFrame;
-  window.C3ScramjetBrowser?.then(({ controller }) => {
-    scramFrame = controller.createFrame();
-    scramFrame.frame.className = 'scramjet-frame';
-    stage.replaceChildren(scramFrame.frame);
-    scramFrame.go('https://example.com');
-    document.querySelector('#browser-status-text').textContent = 'Local Scramjet ready';
-  }).catch((error) => { document.querySelector('#browser-status-text').textContent = `Scramjet failed: ${error.message}`; });
-  document.querySelector('#address-form').addEventListener('submit', (event) => {
-    event.preventDefault();
-    const input = document.querySelector('#address-input');
-    let url = input.value.trim();
-    if (!url) return;
-    if (!/^https?:\/\//i.test(url)) url = `https://${url}`;
+  let runtimePromise;
+  let pendingUrl;
+  const status = document.querySelector('#browser-status-text');
+  const startPage = document.querySelector('#brave-start');
+  const loadRuntime = () => {
+    if (runtimePromise) return runtimePromise;
+    status.textContent = 'Starting private browser runtime...';
+    const createBrowser = window.C3ScramjetBrowser;
+    if (typeof createBrowser !== 'function') {
+      const error = new Error('Browser runtime is unavailable.');
+      status.textContent = error.message;
+      return Promise.reject(error);
+    }
+    runtimePromise = createBrowser().then(({ controller }) => {
+      scramFrame = controller.createFrame();
+      scramFrame.frame.className = 'scramjet-frame';
+      stage.replaceChildren(scramFrame.frame);
+      status.textContent = 'Brave runtime ready';
+      return scramFrame;
+    }).catch((error) => {
+      runtimePromise = null;
+      status.textContent = `Browser failed: ${error.message}`;
+      throw error;
+    });
+    return runtimePromise;
+  };
+  const navigate = (rawValue) => {
+    const value = rawValue.trim();
+    const url = value
+      ? (/^https?:\/\//i.test(value) ? value : (/^[\w.-]+\.[a-z]{2,}(\/.*)?$/i.test(value) ? `https://${value}` : `https://search.brave.com/search?q=${encodeURIComponent(value)}`))
+      : 'https://brave.com/';
     try {
       const parsedUrl = new URL(url);
       if (!['http:', 'https:'].includes(parsedUrl.protocol)) throw new Error('Only HTTP and HTTPS URLs are supported.');
-      url = parsedUrl.href;
+      pendingUrl = parsedUrl.href;
+      startPage.hidden = true;
+      status.textContent = `Loading ${pendingUrl}`;
+      loadRuntime().then((frame) => frame.go(pendingUrl)).catch(() => {});
     } catch (error) {
-      document.querySelector('#browser-status-text').textContent = error.message;
-      return;
+      status.textContent = error.message;
     }
-    if (scramFrame) scramFrame.go(url);
-    document.querySelector('#browser-status-text').textContent = `Loading ${url}`;
+  };
+  document.querySelector('#address-form').addEventListener('submit', (event) => {
+    event.preventDefault();
+    navigate(document.querySelector('#address-input').value);
   });
   document.querySelector('#browser-back').addEventListener('click', () => scramFrame?.back());
   document.querySelector('#browser-forward').addEventListener('click', () => scramFrame?.forward());
+  document.querySelector('#browser-home').addEventListener('click', () => {
+    pendingUrl = null;
+    startPage.hidden = false;
+    status.textContent = 'Brave start page';
+    if (scramFrame) stage.replaceChildren(startPage);
+  });
+  document.querySelector('#brave-search').addEventListener('submit', (event) => {
+    event.preventDefault();
+    navigate(event.currentTarget.querySelector('input').value);
+  });
+  document.querySelectorAll('.brave-links [data-url]').forEach((button) => button.addEventListener('click', () => navigate(button.dataset.url)));
 }
 
 const shelves = {
-  CKV: { json: 'https://cdn.jsdelivr.net/gh/gmshelf/ckv/ckv.json', base: 'https://cdn.jsdelivr.net/gh/gmshelf', label: 'large curated catalog' },
-  Seraph: { json: 'https://cdn.jsdelivr.net/gh/gmshelf/seraph/seraph.json', base: 'https://cdn.jsdelivr.net/gh/gmshelf', label: 'arcade and classics' },
-  Truffled: { json: 'https://cdn.jsdelivr.net/gh/gmshelf/truffled/truffled.json', base: 'https://cdn.jsdelivr.net/gh/gmshelf', label: 'big mixed collection' },
-  UGS: { json: 'https://cdn.jsdelivr.net/gh/gmshelf/ugs/ugs.json', base: 'https://cdn.jsdelivr.net/gh/gmshelf', label: 'quick browser games' }
+  Selenite: { json: 'https://selenite.cc/resources/games.json', base: 'https://selenite.cc', label: 'curated games and Lyra assets', parse: parseSeleniteGames },
+  'GN Math': { json: 'https://cdn.jsdelivr.net/gh/freebuisness/assets@latest/zones.json', base: 'https://gn-math.dev', label: 'games and tools catalog', parse: parseGnMathGames },
+  'Wasm.rip': { json: 'https://wasm.rip/games.json', base: 'https://wasm.rip', label: 'web assembly games', parse: parseWasmGames }
 };
 
 function getGameSource() {
   const savedSource = localStorage.getItem('c3-game-source');
-  return savedSource && shelves[savedSource] ? savedSource : 'CKV';
+  return savedSource && shelves[savedSource] ? savedSource : 'Selenite';
 }
 
 async function loadGames(sourceName) {
   const groups = document.querySelector('#game-groups');
-  const selectedSource = shelves[sourceName] ? sourceName : 'CKV';
+  const selectedSource = shelves[sourceName] ? sourceName : 'Selenite';
   const shelf = shelves[selectedSource];
   gamesRequestController?.abort();
   gamesRequestController = new AbortController();
@@ -212,7 +256,7 @@ async function loadGames(sourceName) {
     const response = await fetch(shelf.json, { signal: gamesRequestController.signal });
     if (!response.ok) throw new Error('Shelf unavailable');
     const payload = await response.json();
-    const games = Array.isArray(payload) ? payload : (Array.isArray(payload.games) ? payload.games : []);
+    const games = shelf.parse(payload);
     groups.innerHTML = `<section class="game-group"><h2>${escapeHtml(selectedSource)} <span class="kicker">${games.length} games</span></h2><div class="game-list">${games.map((game) => { let gameUrl; let imageUrl = ''; try { gameUrl = resolveGameUrl(game.url, shelf.base); imageUrl = game.img ? resolveGameUrl(game.img, shelf.base) : ''; } catch { return ''; } return `<article class="game-card">${imageUrl ? `<img src="${escapeHtml(imageUrl)}" alt="" loading="lazy">` : '<div class="game-art">C3</div>'}<strong>${escapeHtml(game.name || 'Untitled game')}</strong><button data-game-url="${escapeHtml(gameUrl)}" data-game-name="${escapeHtml(game.name || 'Untitled game')}">Play here</button></article>`; }).join('')}</div></section>`;
     groups.querySelectorAll('[data-game-url]').forEach((button) => button.addEventListener('click', () => playGame(button.dataset.gameUrl, button.dataset.gameName)));
     document.querySelector('#game-player-close').addEventListener('click', () => { document.querySelector('#game-player').hidden = true; document.querySelector('#game-frame').src = 'about:blank'; if (activeGameDocumentUrl) { URL.revokeObjectURL(activeGameDocumentUrl); activeGameDocumentUrl = null; } });
@@ -224,8 +268,38 @@ async function loadGames(sourceName) {
   sourceSelect.onchange = (event) => { localStorage.setItem('c3-game-source', event.target.value); loadGames(event.target.value); };
 }
 
+function parseSeleniteGames(payload) {
+  if (!Array.isArray(payload)) return [];
+  return payload.map((game) => {
+    const directory = String(game.directory || '').trim();
+    const image = game.cover || game.image;
+    return {
+      name: game.name,
+      url: directory ? `https://selenite.cc/resources/semag/${encodeURIComponent(directory)}` : '',
+      img: image && directory ? new URL(image, `https://selenite.cc/resources/semag/${encodeURIComponent(directory)}/`).href : ''
+    };
+  }).filter((game) => game.name && game.url);
+}
+
+function parseGnMathGames(payload) {
+  if (!Array.isArray(payload)) return [];
+  return payload.map((game) => {
+    const id = String(game.id || '').trim();
+    const gameUrl = game.url && !String(game.url).includes('{HTML_URL}')
+      ? new URL(game.url, 'https://gn-math.dev').href
+      : id ? `https://gn-math.dev/?id=${encodeURIComponent(id)}` : '';
+    const cover = String(game.cover || '').replace('{COVER_URL}', 'https://cdn.jsdelivr.net/gh/freebuisness/covers@main').replace('{HTML_URL}', 'https://gn-math.dev');
+    return { name: game.name, url: gameUrl, img: cover ? new URL(cover, 'https://gn-math.dev').href : '' };
+  }).filter((game) => game.name && game.url && !String(game.name).includes('[!]'));
+}
+
+function parseWasmGames(payload) {
+  if (!Array.isArray(payload)) return [];
+  return payload.map((game) => ({ name: game.name, url: game.gameUrl, img: game.imageUrl })).filter((game) => game.name && game.url);
+}
+
 function resolveGameUrl(path, base) {
-  const url = new URL(path || '', path?.startsWith('/') ? base : `${base}/`);
+  const url = new URL(path || '', `${base}/`);
   if (!['http:', 'https:'].includes(url.protocol)) throw new Error('Unsupported game resource URL');
   return url.href;
 }
@@ -355,7 +429,7 @@ async function playAnimeStream(params, title, episode) {
 function escapeHtml(value) { return String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[char]); }
 
 function setupSettings() {
-  const currentTheme = document.body.dataset.theme || themes[0];
+  const currentTheme = document.body.dataset.theme || DEFAULT_THEME;
   document.querySelectorAll('.theme-button').forEach((button) => {
     button.classList.toggle('selected', button.dataset.theme === currentTheme);
     button.addEventListener('click', () => {

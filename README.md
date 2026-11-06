@@ -35,7 +35,7 @@ The site has no build step and does not require a package installation. Keep the
 ## External Services
 
 - Scramjet and BareMux provide the local browser runtime and Wisp transport.
-- gmshelf provides the selectable gm3$ catalogs.
+- Lyra's game sources provide the selectable game catalogs and cover assets.
 - AniList provides an1m3 search metadata and episode counts.
 - Lyra provides direct HLS media streams.
 - iTunes Search provides music preview metadata and audio URLs.
