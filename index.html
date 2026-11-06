@@ -7,13 +7,17 @@
     <title>C3</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&family=Orbitron:wght@500;700&family=Press+Start+2P&family=Space+Mono:wght@400;700&family=Unbounded:wght@500;700&family=VT323&display=swap" rel="stylesheet" />
+    <link rel="icon" href="assets/logo.png" />
     <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/gh/Destroyed12121/Staticsj@main/JS/scramjet.all.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
+    <script type="module" src="scram/browser.js"></script>
   </head>
   <body>
     <video class="theme-background" id="theme-background" autoplay muted loop playsinline aria-hidden="true"></video>
     <main class="launcher" aria-label="C3 launcher">
-      <div class="logo-wrap"><img class="logo" src="assets/logo.png" alt="C3" /></div>
+      <div class="logo-wrap"><img class="logo" id="theme-logo" src="assets/logo.png" alt="C3" /></div>
       <p class="changing-footer" aria-live="polite">inspired by x8rs cherri</p>
       <nav class="toolbelt" aria-label="Toolbelt">
         <div class="toolbelt-surface" aria-hidden="true"></div>
@@ -21,6 +25,7 @@
         <span class="divider" aria-hidden="true"></span>
         <button class="tool" data-view="browser" aria-label="Browser"><img src="assets/browser.png" alt="" /></button>
         <button class="tool" data-view="games" aria-label="Games"><img src="assets/games.png" alt="" /></button>
+        <button class="tool" data-view="anime" aria-label="Anime"><img src="assets/anime.png" alt="" onerror="this.src='assets/games.png'" /></button>
         <button class="tool" data-view="music" aria-label="Music"><img src="assets/msuic.png" alt="" /></button>
         <button class="tool" data-view="settings" aria-label="Settings"><img src="assets/settings.png" alt="" /></button>
       </nav>

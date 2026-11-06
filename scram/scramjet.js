@@ -1,7 +1,7 @@
 import * as BareMux from 'https://cdn.jsdelivr.net/npm/@mercuryworkshop/bare-mux/dist/index.mjs';
 
 const status = document.querySelector('#status');
-const runtimeBase = new URL('./', window.location.href).pathname;
+const runtimeBase = new URL('.', import.meta.url).pathname;
 const wispUrl = 'wss://glseries.net/wisp/';
 const runtimeFiles = {
   wasm: 'https://cdn.jsdelivr.net/gh/x8rr/scramjet-templates@main/templates/html/2.0.67-alpha.1/scramjet/scramjet.wasm',
@@ -11,7 +11,7 @@ const runtimeFiles = {
 
 async function bootScramjet() {
   if (!('serviceWorker' in navigator)) throw new Error('Service workers are unavailable in this browser.');
-  await navigator.serviceWorker.register(`${runtimeBase}sw.js`, { scope: runtimeBase });
+  await navigator.serviceWorker.register(`${runtimeBase}sw.js`, { scope: runtimeBase, updateViaCache: 'none' });
   const connection = new BareMux.BareMuxConnection(`${runtimeBase}bareworker.js`);
   await connection.setTransport('epoxy', [{ wisp: wispUrl }]);
   if (typeof window.$scramjetLoadController !== 'function') throw new Error('Scramjet bundle did not expose its controller loader.');

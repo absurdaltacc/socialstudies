@@ -1,8 +1,8 @@
-/*
- * Same-origin registration point for C3's Scramjet runtime.
- * The full interception worker is supplied by the pinned Scramjet template
- * runtime; keeping this entry local gives the browser a stable registration
- * path and prevents cross-origin service-worker registration failures.
- */
-self.addEventListener('install', () => self.skipWaiting());
-self.addEventListener('activate', (event) => event.waitUntil(self.clients.claim()));
+self.$scramjet = {
+	files: {
+		wasm: 'https://cdn.jsdelivr.net/gh/Destroyed12121/Staticsj@main/JS/scramjet.wasm.wasm',
+		sync: 'https://cdn.jsdelivr.net/gh/Destroyed12121/Staticsj@main/JS/scramjet.sync.js'
+	}
+};
+importScripts('https://cdn.jsdelivr.net/gh/Destroyed12121/Staticsj@main/JS/scramjet.all.js');
+importScripts('https://cdn.jsdelivr.net/gh/Destroyed12121/Staticsj@main/B/index.js');
