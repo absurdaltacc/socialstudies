@@ -14,7 +14,7 @@ html, body { min-height: 100%; }
 body {
   margin: 0;
   color: var(--ink);
-  background: var(--paper) url('assets/bg.png') center / cover fixed no-repeat;
+  background: var(--paper) url('assets/toolbar-icons/bg.png') center / cover fixed no-repeat;
   font-family: var(--font-body);
 }
 body::before { content: ''; position: fixed; inset: 0; pointer-events: none; background: rgba(225, 230, 230, .16); }
@@ -30,7 +30,7 @@ button { color: inherit; }
 .changing-footer { min-height: 1.25em; margin: 25px 0 29px; color: var(--ink); font-size: clamp(10px, 1.4vw, 14px); line-height: 1.25; text-align: center; letter-spacing: .03em; transition: opacity .22s ease, transform .22s ease; }
 .changing-footer.fade { opacity: 0; transform: translateY(3px); }
 .toolbelt { position: relative; display: flex; align-items: center; gap: 7px; min-height: 67px; padding: 9px 13px; border: 2px solid var(--line); border-radius: 17px; background: var(--surface); box-shadow: inset 0 0 0 1px rgba(255,255,255,.55), 0 3px 4px rgba(25,27,29,.22); backdrop-filter: blur(2px); }
-.toolbelt-surface { position: absolute; z-index: -1; inset: 7px; opacity: .13; border-radius: 9px; background: url('assets/toolbelt.png') center / cover no-repeat; pointer-events: none; }
+.toolbelt-surface { position: absolute; z-index: -1; inset: 7px; opacity: .13; border-radius: 9px; background: url('assets/toolbar-icons/toolbelt.png') center / cover no-repeat; pointer-events: none; }
 .tool { position: relative; display: grid; place-items: center; width: 46px; height: 46px; padding: 0; border: 1px solid transparent; border-radius: 10px; background: transparent; cursor: pointer; transition: background .16s ease, transform .16s ease, border-color .16s ease; }
 .tool:hover, .tool:focus-visible, .tool.active { background: rgba(255,255,255,.48); border-color: var(--soft-line); outline: none; transform: translateY(-2px); }
 .tool img { width: 30px; height: 30px; object-fit: contain; }
@@ -82,6 +82,8 @@ button { color: inherit; }
 .anime-card:hover { border-color: var(--accent); transform: translateY(-2px); }.anime-card img { width: 100%; height: 210px; object-fit: cover; }.anime-card span { padding: 11px; }.anime-card strong, .anime-card small { display: block; }.anime-card strong { overflow: hidden; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }.anime-card small { margin-top: 6px; color: #60716f; font-size: 10px; }
 .anime-player { position: sticky; top: 0; align-self: start; min-height: 250px; overflow: hidden; border: 1px solid var(--soft-line); border-radius: 12px; background: var(--surface); }.anime-player .player-bar { background: var(--ink); }.anime-episodes { padding: 18px; }.episode-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; margin-top: 10px; max-height: 390px; overflow: auto; }.episode-button { padding: 9px 4px; border: 1px solid var(--soft-line); border-radius: 6px; background: transparent; cursor: pointer; font-size: 10px; }.episode-button:hover { color: #fff; background: var(--accent); }.anime-watch { display: block; margin: 0 18px 18px; text-align: center; }
 .anime-video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #000; }.player-status { margin: 0 18px 18px; color: #60716f; font-size: 10px; line-height: 1.5; }
+.media-stage { position: relative; background: #000; }.media-loading { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; background: rgba(0,0,0,.62); font-size: 11px; }.media-loading[hidden] { display: none; }
+.media-actions { display: flex; align-items: center; gap: 10px; padding: 0 18px 18px; }.media-action { display: inline-flex; align-items: center; justify-content: center; padding: 8px 11px; border: 1px solid var(--line); border-radius: 7px; color: var(--ink); background: var(--surface); font-size: 10px; text-decoration: none; cursor: pointer; }.media-action:hover { color: #fff; background: var(--accent); }.media-action[hidden] { display: none; }.media-actions .player-status { flex: 1; margin: 0; }
 .music-layout { display: grid; grid-template-columns: minmax(230px, .7fr) minmax(320px, 1.3fr); gap: 18px; }
 .music-player { display: flex; flex-direction: column; min-height: 360px; padding: 20px; border: 1px solid var(--soft-line); border-radius: 12px; background: var(--surface); }
 .album-art { display: grid; place-items: center; aspect-ratio: 1; overflow: hidden; color: var(--accent); background: var(--ink); font-size: 58px; }

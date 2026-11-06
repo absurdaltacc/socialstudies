@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: c3
+    runtime: static
+    buildCommand: "echo 'Static site ready'"
+    staticPublishPath: .
+    pullRequestPreviewsEnabled: true
